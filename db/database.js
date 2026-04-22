@@ -22,12 +22,13 @@ async function getDb() {
     CREATE TABLE IF NOT EXISTS registrations (
       id TEXT PRIMARY KEY,
       full_name TEXT NOT NULL,
-      address TEXT NOT NULL,
       school_name TEXT NOT NULL,
-      attendance_confirmed INTEGER NOT NULL DEFAULT 0,
-      distance_km REAL NOT NULL,
-      contact_number TEXT NOT NULL,
+      district TEXT NOT NULL,
+      district_rank INTEGER NOT NULL,
       email TEXT NOT NULL UNIQUE,
+      mobile_number TEXT NOT NULL,
+      participating INTEGER NOT NULL DEFAULT 0,
+      guardian TEXT,
       registered_at TEXT NOT NULL DEFAULT (datetime('now'))
     )
   `);

@@ -175,7 +175,7 @@
       </div>
       <div class="stat-card">
         <div class="num" id="s-avg-dist">—</div>
-        <div class="lbl">Avg Distance (km)</div>
+        <div class="lbl">Avg Rank</div>
       </div>
     </div>
 
@@ -195,12 +195,11 @@
           <tr>
             <th>#</th>
             <th>Full Name</th>
-            <th>City / Address</th>
-            <th>School</th>
-            <th>Attending</th>
-            <th>Distance</th>
-            <th>Phone</th>
-            <th>Email</th>
+            <th>School / District</th>
+            <th>Rank</th>
+            <th>Participating</th>
+            <th>Guardian</th>
+            <th>Phone / Email</th>
             <th>Registered At</th>
           </tr>
         </thead>
@@ -249,23 +248,23 @@
   }
 
   function renderStats() {
-    const confirmed = allData.filter(r => r.attendance_confirmed == 1).length;
-    const avgDist = allData.length
-      ? (allData.reduce((s, r) => s + (r.distance_km || 0), 0) / allData.length).toFixed(1)
+    const confirmed = allData.filter(r => r.participating == 1).length;
+    const avgRank = allData.length
+      ? Math.round(allData.reduce((s, r) => s + (r.district_rank || 0), 0) / allData.length)
       : '—';
     document.getElementById('s-total').textContent = allData.length;
     document.getElementById('s-confirmed').textContent = confirmed;
     document.getElementById('s-unconfirmed').textContent = allData.length - confirmed;
-    document.getElementById('s-avg-dist').textContent = avgDist;
+    document.getElementById('s-avg-dist').textContent = avgRank;
   }
 
   function filterData() {
     const q = document.getElementById('search-input').value.toLowerCase();
     const att = document.getElementById('filter-attend').value;
     filteredData = allData.filter(r => {
-      const matchSearch = !q || [r.full_name, r.address, r.school_name, r.email, r.contact_number]
+      const matchSearch = !q || [r.full_name, r.district, r.school_name, r.email, r.mobile_number]
         .some(v => (v || '').toLowerCase().includes(q));
-      const matchAtt = att === '' || String(r.attendance_confirmed) === att;
+      const matchAtt = att === '' || String(r.participating) === att;
       return matchSearch && matchAtt;
     });
     currentPage = 1;
@@ -290,16 +289,15 @@
       <tr>
         <td style="color:var(--muted);font-size:0.78rem">${start + i + 1}</td>
         <td><strong>${esc(r.full_name)}</strong></td>
-        <td>${esc(r.address)}</td>
-        <td>${esc(r.school_name)}</td>
+        <td>${esc(r.school_name)}<br><span style="font-size:0.75rem;color:var(--muted)">${esc(r.district)}</span></td>
+        <td>${r.district_rank}</td>
         <td>
-          <span class="badge ${r.attendance_confirmed == 1 ? 'badge-yes' : 'badge-no'}">
-            ${r.attendance_confirmed == 1 ? '✓ Yes' : '— No'}
+          <span class="badge ${r.participating == 1 ? 'badge-yes' : 'badge-no'}">
+            ${r.participating == 1 ? '✓ Yes' : '— No'}
           </span>
         </td>
-        <td>${r.distance_km ? r.distance_km + ' km' : '—'}</td>
-        <td>${esc(r.contact_number)}</td>
-        <td style="font-size:0.8rem">${esc(r.email)}</td>
+        <td>${r.participating == 1 ? esc(r.guardian || 'None') : '—'}</td>
+        <td>${esc(r.mobile_number)}<br><span style="font-size:0.75rem;color:var(--muted)">${esc(r.email)}</span></td>
         <td style="font-size:0.78rem;color:var(--muted)">${formatDate(r.registered_at)}</td>
       </tr>
     `).join('');

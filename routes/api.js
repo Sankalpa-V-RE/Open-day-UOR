@@ -7,12 +7,13 @@ const { getDb, saveDb } = require('../db/database');
 // POST /api/register
 router.post('/register', [
   body('full_name').trim().isLength({ min: 2, max: 150 }).withMessage('Full name must be 2-150 characters'),
-  body('address').trim().isLength({ min: 2, max: 300 }).withMessage('Address is required'),
   body('school_name').trim().isLength({ min: 2, max: 200 }).withMessage('School name is required'),
-  body('attendance_confirmed').isBoolean().withMessage('Attendance confirmation required'),
-  body('distance_km').isFloat({ min: 0, max: 5000 }).withMessage('Distance must be a positive number'),
-  body('contact_number').trim().matches(/^[\d\s\+\-\(\)]{7,20}$/).withMessage('Invalid contact number'),
+  body('district').trim().notEmpty().withMessage('District is required'),
+  body('district_rank').isInt({ min: 1 }).withMessage('District rank must be a positive number'),
   body('email').isEmail().normalizeEmail().withMessage('Invalid email address'),
+  body('mobile_number').trim().matches(/^[\d\s\+\-\(\)]{7,20}$/).withMessage('Invalid mobile number'),
+  body('participating').isBoolean().withMessage('Participation confirmation required'),
+  body('guardian').optional({ checkFalsy: true }).trim().isLength({ max: 50 }).withMessage('Guardian value is invalid'),
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -21,7 +22,7 @@ router.post('/register', [
 
   try {
     const db = await getDb();
-    const { full_name, address, school_name, attendance_confirmed, distance_km, contact_number, email } = req.body;
+    const { full_name, school_name, district, district_rank, email, mobile_number, participating, guardian } = req.body;
     const id = uuidv4();
     const now = new Date().toISOString();
 
@@ -32,9 +33,9 @@ router.post('/register', [
     }
 
     db.run(
-      `INSERT INTO registrations (id, full_name, address, school_name, attendance_confirmed, distance_km, contact_number, email, registered_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, full_name, address, school_name, attendance_confirmed ? 1 : 0, parseFloat(distance_km), contact_number, email, now]
+      `INSERT INTO registrations (id, full_name, school_name, district, district_rank, email, mobile_number, participating, guardian, registered_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id, full_name, school_name, district, parseInt(district_rank, 10), email, mobile_number, participating ? 1 : 0, guardian || null, now]
     );
     saveDb();
 
@@ -75,11 +76,11 @@ router.get('/admin/export-csv', async (req, res) => {
   }
   try {
     const db = await getDb();
-    const result = db.exec(`SELECT full_name, address, school_name, attendance_confirmed, distance_km, contact_number, email, registered_at FROM registrations ORDER BY registered_at DESC`);
+    const result = db.exec(`SELECT full_name, school_name, district, district_rank, participating, guardian, mobile_number, email, registered_at FROM registrations ORDER BY registered_at DESC`);
     if (result.length === 0) {
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', 'attachment; filename="registrations.csv"');
-      return res.send('full_name,address,school_name,attendance_confirmed,distance_km,contact_number,email,registered_at\n');
+      return res.send('full_name,school_name,district,district_rank,participating,guardian,mobile_number,email,registered_at\n');
     }
     const cols = result[0].columns;
     const rows = result[0].values;
@@ -100,7 +101,7 @@ router.get('/stats', async (req, res) => {
   try {
     const db = await getDb();
     const total = db.exec(`SELECT COUNT(*) as count FROM registrations`);
-    const confirmed = db.exec(`SELECT COUNT(*) as count FROM registrations WHERE attendance_confirmed = 1`);
+    const confirmed = db.exec(`SELECT COUNT(*) as count FROM registrations WHERE participating = 1`);
     return res.json({
       success: true,
       total: total[0]?.values[0][0] || 0,

@@ -829,13 +829,14 @@
         </div>
         <div class="step-labels">
           <span class="step-label active" id="slabel-1">Personal</span>
-          <span class="step-label" id="slabel-2">School</span>
-          <span class="step-label" id="slabel-3">Contact</span>
+          <span class="step-label" id="slabel-2">Academic</span>
+          <span class="step-label" id="slabel-3">Event</span>
           <span class="step-label" id="slabel-4">Review</span>
         </div>
       </div>
 
       <!-- Form -->
+      
       <div class="form-body" id="form-body">
         <!-- Step 1: Personal -->
         <div class="form-step active" id="step-1">
@@ -846,10 +847,17 @@
             <input type="text" id="full_name" placeholder="e.g. Kavindu Perera" autocomplete="name" />
             <div class="field-error" id="err-full_name">Please enter your full name.</div>
           </div>
-          <div class="field-group">
-            <label>Residential Address / City <span class="req">*</span></label>
-            <input type="text" id="address" placeholder="e.g. Matara, Southern Province" />
-            <div class="field-error" id="err-address">Please enter your city or address.</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>Contact Number <span class="req">*</span></label>
+              <input type="tel" id="mobile_number" placeholder="07X XXXXXXX" autocomplete="tel" />
+              <div class="field-error" id="err-mobile_number">Enter a valid phone number.</div>
+            </div>
+            <div class="field-group">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+              <div class="field-error" id="err-email">Enter a valid email address.</div>
+            </div>
           </div>
           <div class="form-nav">
             <span></span>
@@ -857,38 +865,32 @@
           </div>
         </div>
 
-        <!-- Step 2: School -->
+        <!-- Step 2: Academic -->
         <div class="form-step" id="step-2">
-          <h3 class="step-heading">School & Distance</h3>
-          <p class="step-sub">Help us understand where you're coming from.</p>
+          <h3 class="step-heading">Academic Information</h3>
+          <p class="step-sub">Tell us about your school.</p>
           <div class="field-group">
             <label>School Name <span class="req">*</span></label>
             <input type="text" id="school_name" placeholder="e.g. Mahinda College, Galle" />
             <div class="field-error" id="err-school_name">Please enter your school name.</div>
           </div>
-          <div class="field-group">
-            <label>Approximate Distance to Campus <span class="req">*</span></label>
-            <div class="distance-display">
-              <span class="distance-val" id="dist-display">50</span>
-              <span class="distance-unit">km</span>
+          <div class="field-row">
+            <div class="field-group">
+              <label>District (Sat for G.C.E. A/L) <span class="req">*</span></label>
+              <select id="district_select" class="form-select" onchange="toggleOtherDistrict()" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--cream); outline: none;">
+                <option value="">Select District</option>
+                <option value="Galle">Galle</option>
+                <option value="Matara">Matara</option>
+                <option value="Hambanthota">Hambanthota</option>
+                <option value="Other">Other</option>
+              </select>
+              <input type="text" id="district_other" placeholder="Specify your district" style="display:none; margin-top:10px;" />
+              <div class="field-error" id="err-district">Please select or enter your district.</div>
             </div>
-            <input type="range" id="distance_slider" min="1" max="500" value="50" oninput="updateDistance(this.value)" />
-            <div class="distance-labels"><span>1 km</span><span>250 km</span><span>500 km</span></div>
-            <div class="distance-manual">
-              <label for="distance_km">Or type exact km:</label>
-              <input type="number" id="distance_km" min="0.1" max="5000" step="0.1" value="50" oninput="updateSlider(this.value)" style="width:110px" />
-            </div>
-            <div class="field-error" id="err-distance_km">Please enter a valid distance.</div>
-          </div>
-          <div class="field-group">
-            <label>Will You Attend? <span class="req">*</span></label>
-            <div class="attendance-toggle">
-              <button type="button" class="toggle-btn selected" id="att-yes" onclick="setAttendance(true)">
-                <span>✅</span> Yes, I'll be there!
-              </button>
-              <button type="button" class="toggle-btn" id="att-no" onclick="setAttendance(false)">
-                <span>🤔</span> Not sure yet
-              </button>
+            <div class="field-group">
+              <label>District Rank <span class="req">*</span></label>
+              <input type="number" id="district_rank" placeholder="e.g. 15" min="1" />
+              <div class="field-error" id="err-district_rank">Please enter a valid district rank.</div>
             </div>
           </div>
           <div class="form-nav">
@@ -897,21 +899,29 @@
           </div>
         </div>
 
-        <!-- Step 3: Contact -->
+        <!-- Step 3: Event -->
         <div class="form-step" id="step-3">
-          <h3 class="step-heading">Contact Details</h3>
-          <p class="step-sub">We'll send your confirmation to these details.</p>
-          <div class="field-row">
-            <div class="field-group">
-              <label>Contact Number <span class="req">*</span></label>
-              <input type="tel" id="contact_number" placeholder="+94 77 123 4567" autocomplete="tel" />
-              <div class="field-error" id="err-contact_number">Enter a valid phone number.</div>
+          <h3 class="step-heading">Event Details</h3>
+          <p class="step-sub">Attendance confirmation and guardian details.</p>
+          <div class="field-group">
+            <label>To participate on April 29 <span class="req">*</span></label>
+            <div class="attendance-toggle">
+              <button type="button" class="toggle-btn selected" id="att-yes" onclick="setParticipating(true)">
+                <span>✅</span> Yes
+              </button>
+              <button type="button" class="toggle-btn" id="att-no" onclick="setParticipating(false)">
+                <span>🚫</span> No
+              </button>
             </div>
-            <div class="field-group">
-              <label>Email Address <span class="req">*</span></label>
-              <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
-              <div class="field-error" id="err-email">Enter a valid email address.</div>
-            </div>
+          </div>
+          <div class="field-group" id="guardian_wrapper">
+            <label>Accompanying guardian (if attending)</label>
+            <select id="guardian" class="form-select" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--cream); outline: none;">
+              <option value="">None</option>
+              <option value="Mother">Mother</option>
+              <option value="Father">Father</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
           <div class="form-nav">
             <button class="btn-back" onclick="prevStep(3)">← Back</button>
@@ -926,18 +936,19 @@
           <div class="review-card">
             <div class="review-header">Personal Information</div>
             <div class="review-row"><span class="rl">Full Name</span><span class="rv" id="rv-name">—</span></div>
-            <div class="review-row"><span class="rl">City / Address</span><span class="rv" id="rv-address">—</span></div>
-          </div>
-          <div class="review-card">
-            <div class="review-header">School & Distance</div>
-            <div class="review-row"><span class="rl">School</span><span class="rv" id="rv-school">—</span></div>
-            <div class="review-row"><span class="rl">Distance</span><span class="rv" id="rv-distance">—</span></div>
-            <div class="review-row"><span class="rl">Will Attend</span><span class="rv" id="rv-attend">—</span></div>
-          </div>
-          <div class="review-card">
-            <div class="review-header">Contact Details</div>
             <div class="review-row"><span class="rl">Phone</span><span class="rv" id="rv-phone">—</span></div>
             <div class="review-row"><span class="rl">Email</span><span class="rv" id="rv-email">—</span></div>
+          </div>
+          <div class="review-card">
+            <div class="review-header">Academic Information</div>
+            <div class="review-row"><span class="rl">School</span><span class="rv" id="rv-school">—</span></div>
+            <div class="review-row"><span class="rl">District</span><span class="rv" id="rv-district">—</span></div>
+            <div class="review-row"><span class="rl">District Rank</span><span class="rv" id="rv-rank">—</span></div>
+          </div>
+          <div class="review-card">
+            <div class="review-header">Event Details</div>
+            <div class="review-row"><span class="rl">Participating</span><span class="rv" id="rv-attend">—</span></div>
+            <div class="review-row"><span class="rl">Guardian</span><span class="rv" id="rv-guardian">—</span></div>
           </div>
           <div id="submit-error" style="display:none;background:#fef0f0;border:1px solid #f5c5c5;border-radius:10px;padding:12px 16px;color:var(--error);font-size:0.88rem;margin-bottom:1rem;"></div>
           <div class="form-nav">
@@ -978,7 +989,7 @@
 <script>
   // ─── STATE ───
   let currentStep = 1;
-  let attendanceConfirmed = true;
+  let isParticipating = true;
 
   // ─── STATS ───
   fetch('/api/stats').then(r => r.json()).then(d => {
@@ -1022,28 +1033,31 @@
     let valid = true;
     if (step === 1) {
       const name = document.getElementById('full_name').value.trim();
-      const addr = document.getElementById('address').value.trim();
-      clearError('full_name'); clearError('address');
-      if (name.length < 2) { showError('full_name', 'Full name must be at least 2 characters.'); valid = false; }
-      if (addr.length < 2) { showError('address', 'Please enter your city or address.'); valid = false; }
+      const phone = document.getElementById('mobile_number').value.trim();
+      const email = document.getElementById('email').value.trim();
+      clearError('full_name'); clearError('mobile_number'); clearError('email');
+      
+      if (name.length < 2) { showError('full_name', 'Full name required.'); valid = false; }
+      if (!/^[\d\s\+\-\(\)]{7,20}$/.test(phone)) { showError('mobile_number', 'Valid phone required.'); valid = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email', 'Valid email required.'); valid = false; }
     }
     if (step === 2) {
       const school = document.getElementById('school_name').value.trim();
-      const dist = parseFloat(document.getElementById('distance_km').value);
-      clearError('school_name'); clearError('distance_km');
-      if (school.length < 2) { showError('school_name', 'School name must be at least 2 characters.'); valid = false; }
-      if (isNaN(dist) || dist < 0) { showError('distance_km', 'Enter a valid distance (km).'); valid = false; }
+      const distSel = document.getElementById('district_select').value;
+      const distOtr = document.getElementById('district_other').value.trim();
+      const dist = (distSel === 'Other') ? distOtr : distSel;
+      const rank = parseInt(document.getElementById('district_rank').value);
+      
+      clearError('school_name'); clearError('district'); clearError('district_rank');
+      if (school.length < 2) { showError('school_name', 'School name required.'); valid = false; }
+      if (!dist) { showError('district', 'District required.'); valid = false; }
+      if (isNaN(rank) || rank < 1) { showError('district_rank', 'Valid rank required.'); valid = false; }
     }
     if (step === 3) {
-      const phone = document.getElementById('contact_number').value.trim();
-      const email = document.getElementById('email').value.trim();
-      clearError('contact_number'); clearError('email');
-      if (!/^[\d\s\+\-\(\)]{7,20}$/.test(phone)) { showError('contact_number', 'Enter a valid phone number.'); valid = false; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email', 'Enter a valid email address.'); valid = false; }
+      // Nothing strict to validate as guardian is optional and select exists.
     }
     return valid;
   }
-
   // ─── STEPS ───
   function goToStep(n) {
     document.getElementById('step-' + currentStep).classList.remove('active');
@@ -1070,14 +1084,17 @@
   // ─── REVIEW ───
   function populateReview() {
     document.getElementById('rv-name').textContent = document.getElementById('full_name').value.trim();
-    document.getElementById('rv-address').textContent = document.getElementById('address').value.trim();
-    document.getElementById('rv-school').textContent = document.getElementById('school_name').value.trim();
-    document.getElementById('rv-distance').textContent = document.getElementById('distance_km').value + ' km';
-    document.getElementById('rv-attend').textContent = attendanceConfirmed ? '✅ Yes, I will attend' : '🤔 Not confirmed yet';
-    document.getElementById('rv-phone').textContent = document.getElementById('contact_number').value.trim();
+    document.getElementById('rv-phone').textContent = document.getElementById('mobile_number').value.trim();
     document.getElementById('rv-email').textContent = document.getElementById('email').value.trim();
+    
+    document.getElementById('rv-school').textContent = document.getElementById('school_name').value.trim();
+    const distSel = document.getElementById('district_select').value;
+    document.getElementById('rv-district').textContent = (distSel === 'Other') ? document.getElementById('district_other').value.trim() : distSel;
+    document.getElementById('rv-rank').textContent = document.getElementById('district_rank').value;
+    
+    document.getElementById('rv-attend').textContent = isParticipating ? 'Yes' : 'No';
+    document.getElementById('rv-guardian').textContent = isParticipating && document.getElementById('guardian').value ? document.getElementById('guardian').value : 'None / N/A';
   }
-
   // ─── SUBMIT ───
   async function submitForm() {
     const btn = document.getElementById('submit-btn');
