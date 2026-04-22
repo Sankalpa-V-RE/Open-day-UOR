@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Open Day Registrations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1b3e; --gold: #c9a84c; --gold2: #e8c96a;
+      --cream: #f8f4ee; --bg: #f0ede8;
+      --text: #1a2340; --muted: #6b7593; --border: #ddd8ce;
+      --radius: 12px;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* Login */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: white; border: 1px solid var(--border); border-radius: 20px;
+      padding: 3rem; max-width: 400px; width: 100%; text-align: center;
+      box-shadow: 0 8px 40px rgba(13,27,62,0.1);
+    }
+    .login-crest { font-size: 3rem; margin-bottom: 1rem; }
+    .login-title {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem;
+      color: var(--navy); margin-bottom: 0.4rem;
+    }
+    .login-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 2rem; }
+    .login-box input[type="password"] {
+      width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+      outline: none; transition: border-color 0.2s;
+      background: var(--cream); color: var(--text);
+    }
+    .login-box input:focus { border-color: var(--gold); }
+    .login-btn {
+      margin-top: 1rem; width: 100%; padding: 13px;
+      background: var(--navy); color: white; border: none; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .login-btn:hover { background: #122352; }
+    .login-err { color: #b82c2c; font-size: 0.82rem; margin-top: 0.5rem; }
+
+    /* Dashboard */
+    #dashboard { display: none; }
+
+    header {
+      background: var(--navy); padding: 0 2rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+    }
+    .header-title { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1.1rem; }
+    .header-title span { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; color: rgba(248,244,238,0.5); display: block; }
+    .header-actions { display: flex; gap: 0.75rem; }
+    .btn-sm {
+      padding: 8px 18px; border-radius: 100px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s;
+    }
+    .btn-gold { background: var(--gold); color: var(--navy); }
+    .btn-gold:hover { background: var(--gold2); }
+    .btn-outline-sm { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); }
+    .btn-outline-sm:hover { border-color: var(--gold); color: var(--gold2); }
+
+    .main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
+    /* Stats row */
+    .stats-row { display: flex; gap: 1.25rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .stat-card {
+      background: white; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.25rem 1.75rem; min-width: 160px;
+    }
+    .stat-card .num { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--navy); }
+    .stat-card .lbl { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: 2px; }
+
+    /* Controls */
+    .controls {
+      display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
+    }
+    .search-box {
+      padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none;
+      transition: border-color 0.2s; background: white; flex: 1; min-width: 200px;
+    }
+    .search-box:focus { border-color: var(--gold); }
+    .filter-select {
+      padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: white;
+      cursor: pointer; outline: none;
+    }
+
+    /* Table */
+    .table-wrap {
+      background: white; border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    thead tr { background: var(--navy); }
+    thead th {
+      color: rgba(248,244,238,0.8); font-weight: 500; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 12px 16px; text-align: left; white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #faf8f5; }
+    tbody td { padding: 12px 16px; color: var(--text); vertical-align: middle; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 100px; font-size: 0.72rem; font-weight: 600;
+    }
+    .badge-yes { background: #d4f4e4; color: #1a7a4a; }
+    .badge-no { background: #f0ede8; color: #6b7593; }
+    .no-data { text-align: center; padding: 3rem; color: var(--muted); }
+
+    /* Pagination */
+    .pagination { display: flex; gap: 0.5rem; margin-top: 1.5rem; justify-content: center; align-items: center; }
+    .page-btn {
+      padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+      background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      transition: all 0.15s;
+    }
+    .page-btn:hover { border-color: var(--gold); color: var(--navy); }
+    .page-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .page-info { color: var(--muted); font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-crest">🔐</div>
+    <h2 class="login-title">Admin Portal</h2>
+    <p class="login-sub">Faculty of Engineering Open Day 2025</p>
+    <input type="password" id="pwd-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <p class="login-err" id="login-err"></p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header>
+    <div>
+      <div class="header-title">
+        Admin Dashboard
+        <span>Open Day 2025 — Registrations</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn-sm btn-outline-sm" onclick="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="num" id="s-total">0</div>
+        <div class="lbl">Total Registrations</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-confirmed">0</div>
+        <div class="lbl">Confirmed Attendance</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-unconfirmed">0</div>
+        <div class="lbl">Not Confirmed</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="s-avg-dist">—</div>
+        <div class="lbl">Avg Distance (km)</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input class="search-box" id="search-input" type="text" placeholder="🔍  Search by name, school, email, city…" oninput="filterData()" />
+      <select class="filter-select" id="filter-attend" onchange="filterData()">
+        <option value="">All Attendance</option>
+        <option value="1">Confirmed</option>
+        <option value="0">Not Confirmed</option>
+      </select>
+      <span class="page-info" id="result-count"></span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>City / Address</th>
+            <th>School</th>
+            <th>Attending</th>
+            <th>Distance</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="9" class="no-data">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<script>
+  let allData = [];
+  let filteredData = [];
+  let currentPassword = '';
+  let currentPage = 1;
+  const PAGE_SIZE = 20;
+
+  async function doLogin() {
+    const pwd = document.getElementById('pwd-input').value;
+    const err = document.getElementById('login-err');
+    err.textContent = '';
+    if (!pwd) { err.textContent = 'Please enter the password.'; return; }
+
+    const res = await fetch(`/api/admin/registrations?password=${encodeURIComponent(pwd)}`);
+    const data = await res.json();
+    if (data.success) {
+      currentPassword = pwd;
+      allData = data.data;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      renderStats();
+      filterData();
+    } else {
+      err.textContent = 'Incorrect password.';
+    }
+  }
+
+  function logout() {
+    currentPassword = '';
+    allData = [];
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('pwd-input').value = '';
+  }
+
+  function renderStats() {
+    const confirmed = allData.filter(r => r.attendance_confirmed == 1).length;
+    const avgDist = allData.length
+      ? (allData.reduce((s, r) => s + (r.distance_km || 0), 0) / allData.length).toFixed(1)
+      : '—';
+    document.getElementById('s-total').textContent = allData.length;
+    document.getElementById('s-confirmed').textContent = confirmed;
+    document.getElementById('s-unconfirmed').textContent = allData.length - confirmed;
+    document.getElementById('s-avg-dist').textContent = avgDist;
+  }
+
+  function filterData() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const att = document.getElementById('filter-attend').value;
+    filteredData = allData.filter(r => {
+      const matchSearch = !q || [r.full_name, r.address, r.school_name, r.email, r.contact_number]
+        .some(v => (v || '').toLowerCase().includes(q));
+      const matchAtt = att === '' || String(r.attendance_confirmed) === att;
+      return matchSearch && matchAtt;
+    });
+    currentPage = 1;
+    renderTable();
+    renderPagination();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('table-body');
+    document.getElementById('result-count').textContent =
+      `Showing ${filteredData.length} of ${allData.length} registrations`;
+
+    if (filteredData.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" class="no-data">No registrations found.</td></tr>';
+      return;
+    }
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const page = filteredData.slice(start, start + PAGE_SIZE);
+
+    tbody.innerHTML = page.map((r, i) => `
+      <tr>
+        <td style="color:var(--muted);font-size:0.78rem">${start + i + 1}</td>
+        <td><strong>${esc(r.full_name)}</strong></td>
+        <td>${esc(r.address)}</td>
+        <td>${esc(r.school_name)}</td>
+        <td>
+          <span class="badge ${r.attendance_confirmed == 1 ? 'badge-yes' : 'badge-no'}">
+            ${r.attendance_confirmed == 1 ? '✓ Yes' : '— No'}
+          </span>
+        </td>
+        <td>${r.distance_km ? r.distance_km + ' km' : '—'}</td>
+        <td>${esc(r.contact_number)}</td>
+        <td style="font-size:0.8rem">${esc(r.email)}</td>
+        <td style="font-size:0.78rem;color:var(--muted)">${formatDate(r.registered_at)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderPagination() {
+    const total = Math.ceil(filteredData.length / PAGE_SIZE);
+    const pg = document.getElementById('pagination');
+    if (total <= 1) { pg.innerHTML = ''; return; }
+    let html = '';
+    if (currentPage > 1) html += `<button class="page-btn" onclick="goPage(${currentPage-1})">← Prev</button>`;
+    for (let i = 1; i <= total; i++) {
+      if (i === 1 || i === total || Math.abs(i - currentPage) <= 2)
+        html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      else if (Math.abs(i - currentPage) === 3)
+        html += `<span class="page-info">…</span>`;
+    }
+    if (currentPage < total) html += `<button class="page-btn" onclick="goPage(${currentPage+1})">Next →</button>`;
+    pg.innerHTML = html;
+  }
+
+  function goPage(n) { currentPage = n; renderTable(); renderPagination(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+  function exportCSV() {
+    window.open(`/api/admin/export-csv?password=${encodeURIComponent(currentPassword)}`, '_blank');
+  }
+
+  function esc(str) {
+    if (!str) return '—';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function formatDate(dt) {
+    if (!dt) return '—';
+    try {
+      const d = new Date(dt);
+      return d.toLocaleDateString('en-GB') + ' ' + d.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+    } catch { return dt; }
+  }
+
+  // Enter key on password input
+  document.getElementById('pwd-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>
