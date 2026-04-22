@@ -837,6 +837,7 @@
 
       <!-- Form -->
       
+      
       <div class="form-body" id="form-body">
         <!-- Step 1: Personal -->
         <div class="form-step active" id="step-1">
@@ -889,7 +890,7 @@
             </div>
             <div class="field-group">
               <label>District Rank <span class="req">*</span></label>
-              <input type="number" id="district_rank" placeholder="e.g. 15" min="1" />
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="district_rank" placeholder="e.g. 15" />
               <div class="field-error" id="err-district_rank">Please enter a valid district rank.</div>
             </div>
           </div>
@@ -997,22 +998,18 @@
     else document.getElementById('stat-registered').textContent = '0';
   }).catch(() => { document.getElementById('stat-registered').textContent = '0'; });
 
-  // ─── DISTANCE ───
-  function updateDistance(val) {
-    document.getElementById('dist-display').textContent = val;
-    document.getElementById('distance_km').value = val;
-  }
-  function updateSlider(val) {
-    const v = Math.min(500, Math.max(0, parseFloat(val) || 0));
-    document.getElementById('distance_slider').value = v;
-    document.getElementById('dist-display').textContent = parseFloat(val) || 0;
-  }
-
   // ─── ATTENDANCE ───
-  function setAttendance(val) {
-    attendanceConfirmed = val;
+  function setParticipating(val) {
+    isParticipating = val;
     document.getElementById('att-yes').classList.toggle('selected', val);
     document.getElementById('att-no').classList.toggle('selected', !val);
+    document.getElementById('guardian_wrapper').style.display = val ? 'block' : 'none';
+    if (!val) document.getElementById('guardian').value = '';
+  }
+  
+  function toggleOtherDistrict() {
+    const sel = document.getElementById('district_select').value;
+    document.getElementById('district_other').style.display = (sel === 'Other') ? 'block' : 'none';
   }
 
   // ─── VALIDATION ───
@@ -1046,7 +1043,7 @@
       const distSel = document.getElementById('district_select').value;
       const distOtr = document.getElementById('district_other').value.trim();
       const dist = (distSel === 'Other') ? distOtr : distSel;
-      const rank = parseInt(document.getElementById('district_rank').value);
+      const rank = parseInt(document.getElementById('district_rank').value, 10);
       
       clearError('school_name'); clearError('district'); clearError('district_rank');
       if (school.length < 2) { showError('school_name', 'School name required.'); valid = false; }
@@ -1095,6 +1092,7 @@
     document.getElementById('rv-attend').textContent = isParticipating ? 'Yes' : 'No';
     document.getElementById('rv-guardian').textContent = isParticipating && document.getElementById('guardian').value ? document.getElementById('guardian').value : 'None / N/A';
   }
+
   // ─── SUBMIT ───
   async function submitForm() {
     const btn = document.getElementById('submit-btn');
@@ -1103,14 +1101,17 @@
     btn.disabled = true;
     document.getElementById('submit-text').textContent = '⏳ Submitting…';
 
+    const distSel = document.getElementById('district_select').value;
+    const distOtr = document.getElementById('district_other').value.trim();
     const payload = {
       full_name: document.getElementById('full_name').value.trim(),
-      address: document.getElementById('address').value.trim(),
-      school_name: document.getElementById('school_name').value.trim(),
-      attendance_confirmed: attendanceConfirmed,
-      distance_km: parseFloat(document.getElementById('distance_km').value),
-      contact_number: document.getElementById('contact_number').value.trim(),
+      mobile_number: document.getElementById('mobile_number').value.trim(),
       email: document.getElementById('email').value.trim(),
+      school_name: document.getElementById('school_name').value.trim(),
+      district: (distSel === 'Other') ? distOtr : distSel,
+      district_rank: parseInt(document.getElementById('district_rank').value, 10),
+      participating: isParticipating,
+      guardian: isParticipating ? document.getElementById('guardian').value : null
     };
 
     try {
