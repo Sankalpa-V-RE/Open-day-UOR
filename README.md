@@ -1,4 +1,4 @@
-# 🎓 Faculty of Engineering, University of Ruhuna — Open Day 2025
+# 🎓 Faculty of Engineering, University of Ruhuna — Open Day 2026
 
 Registration website for the Faculty of Engineering Open Day.
 
@@ -28,7 +28,7 @@ The website will be running at:
 ## 🔐 Admin Panel
 
 - URL: `/admin`
-- Default password: `openday2025`
+- Default password: `openday2026`
 
 **To change the admin password**, set the environment variable:
 ```bash

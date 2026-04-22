@@ -49,7 +49,7 @@ router.post('/register', [
 // GET /api/admin/registrations  (simple password protection via query param)
 router.get('/admin/registrations', async (req, res) => {
   const { password } = req.query;
-  if (password !== (process.env.ADMIN_PASSWORD || 'openday2025')) {
+  if (password !== (process.env.ADMIN_PASSWORD || 'openday2026')) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
   try {
@@ -71,7 +71,7 @@ router.get('/admin/registrations', async (req, res) => {
 // GET /api/admin/export-csv
 router.get('/admin/export-csv', async (req, res) => {
   const { password } = req.query;
-  if (password !== (process.env.ADMIN_PASSWORD || 'openday2025')) {
+  if (password !== (process.env.ADMIN_PASSWORD || 'openday2026')) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
   try {

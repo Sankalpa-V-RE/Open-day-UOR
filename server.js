@@ -38,7 +38,7 @@ getDb().then(() => {
     console.log(`\n🎓 Faculty of Engineering Open Day Registration`);
     console.log(`   Running at http://localhost:${PORT}`);
     console.log(`   Admin panel: http://localhost:${PORT}/admin`);
-    console.log(`   Admin password: ${process.env.ADMIN_PASSWORD || 'openday2025'}\n`);
+    console.log(`   Admin password: ${process.env.ADMIN_PASSWORD || 'openday2026'}\n`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);
