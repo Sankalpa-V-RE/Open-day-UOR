@@ -661,14 +661,14 @@
   </div>
   
   <div class="hero-content glass-panel" style="margin-top: 50px;">
-    <div class="hero-eyebrow" style="background: var(--gold); border-color: var(--gold); color: var(--navy); font-size: 1.2rem; font-weight: 800; padding: 0.6rem 2rem; box-shadow: 0 4px 15px rgba(212,175,55,0.4);">Open Day 2026</div>
+    <div class="hero-eyebrow" style="background: rgba(212,175,55,0.1); border: 2px solid rgba(212,175,55,0.8); color: var(--gold2); font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 900; padding: 0.6rem 2rem; margin: 0 auto 1.5rem auto; text-align: center; letter-spacing: 0.08em; display: inline-block; filter: drop-shadow(0 4px 15px rgba(212,175,55,0.4));">Open Day 2026</div>
     <h1 class="hero-title">
       Experience<br>
       <span class="accent">Engineering</span><br>
       at Ruhuna
     </h1>
     <p class="hero-subtitle" style="color: rgba(255,255,255,0.9);">
-      We warmly invite all students awaiting A/L results to come and experience real life at the Faculty of Engineering, University of Ruhuna. Discover, connect, and make the right decision for your future.
+      We warmly invite all students who have received their A/L results and are currently awaiting campus selection to come and experience real life at the Faculty of Engineering, University of Ruhuna. Explore our campus, connect with our community, and gain the clarity you need to make the right decision for your future.
     </p>
     <div class="hero-actions">
       <a href="#register" class="btn-primary" style="overflow:hidden; position:relative; z-index:1;">
@@ -766,7 +766,7 @@
       <a class="dept-card reveal" href="https://www.eng.ruh.ac.lk/dmme/academics/marine-engineering-and-naval-architecture/" target="_blank" rel="noopener">
         <span class="dept-icon"></span>
         <div class="dept-degree">B.Sc.Eng (Hons)</div>
-        <div class="dept-name">Marine Engineering and Naval Architecture <span class="dept-special">Only in Sri Lanka</span></div>
+        <div class="dept-name">Marine Engineering and Naval Architecture</div>
         <div class="dept-link">Visit Department →</div>
       </a>
       <a class="dept-card reveal" href="https://www.eng.ruh.ac.lk/academic/undergraduate-programs/computer-engineering/" target="_blank" rel="noopener">
@@ -795,7 +795,7 @@
       <div class="g-img" title="Replace: images/gallery-4.jpg — e.g. department or lecture hall"></div>
       <div class="g-img" title="Replace: images/gallery-5.jpg — e.g. campus grounds"></div>
     </div>
-    <p class="gallery-note reveal">📸 Place your photos in the <code>public/images/</code> folder as <code>gallery-1.jpg</code> through <code>gallery-5.jpg</code> to populate this gallery.</p>
+
   </div>
 </section>
 
@@ -805,6 +805,7 @@
     <p class="section-eyebrow reveal">Open Day 2026</p>
     <h2 class="section-title reveal">Register Your Attendance</h2>
     <p class="section-lead reveal">Secure your spot at the most exciting engineering open day in Sri Lanka. It takes less than 2 minutes.</p>
+
 
     <div class="form-wrapper reveal" id="form-wrapper">
       <!-- Progress -->
@@ -969,7 +970,17 @@
           Thank you for registering for the Faculty of Engineering Open Day 2026.<br>
           We look forward to welcoming you at the University of Ruhuna. 
         </p>
-        <div class="success-id">Registration ID: <strong id="success-id-val">—</strong></div>
+        
+        <div class="notice-box" style="background: #f0fdf4; border: 2px solid var(--success); border-left: 6px solid var(--success); padding: 1.5rem; border-radius: 8px; margin: 1.5rem auto 2rem auto; max-width: 550px; font-size: 1rem; color: var(--navy); text-align: left; box-shadow: 0 4px 15px rgba(26,122,74,0.15);">
+          <h4 style="margin-bottom: 8px; font-size: 1.05rem; font-weight: 700; color: var(--success); display: flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Important Notice
+          </h4>
+          <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.6; color: var(--muted);">
+            <li style="margin-bottom: 8px; font-size: 1.05rem; color: var(--navy); font-weight: 600;">We kindly request all participants to dress in <span style="color: var(--success); font-weight: 800;">formal or smart casual attire</span>.</li>
+            <li>Refreshments will be provided for all participants.</li>
+          </ul>
+        </div>\n        <div class="success-id">Registration ID: <strong id="success-id-val">—</strong></div>
         <a href="#" class="btn-primary" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Back to Top</a>
       </div>
     </div>
