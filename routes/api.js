@@ -39,6 +39,29 @@ router.post('/register', [
     );
     saveDb();
 
+    // Google Sheets Integration
+    const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
+    if (sheetUrl && sheetUrl.includes('/exec')) {
+      // Run in background to not block the response
+      fetch(sheetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name,
+          school_name,
+          district,
+          district_rank,
+          email,
+          mobile_number,
+          participating,
+          guardian,
+          id
+        })
+      }).catch(err => console.error('Google Sheets Error:', err.message));
+    } else {
+      console.warn('Google Sheets URL not configured or invalid (must end in /exec)');
+    }
+
     return res.json({ success: true, message: 'Registration successful!', id });
   } catch (err) {
     console.error('Registration error:', err);
