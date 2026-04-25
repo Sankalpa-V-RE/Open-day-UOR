@@ -679,11 +679,7 @@
     </div>
     <div class="hero-stats">
       <div class="stat-item">
-        <span class="stat-num" id="stat-registered">—</span>
-        <span class="stat-label" style="color: rgba(255,255,255,0.7);">Registered</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">5</span>
+        <span class="stat-num">6</span>
         <span class="stat-label" style="color: rgba(255,255,255,0.7);">Departments</span>
       </div>
       <div class="stat-item">
@@ -743,7 +739,7 @@
   <div class="container">
     <p class="section-eyebrow reveal">Academic Programmes</p>
     <h2 class="section-title reveal">Our Departments</h2>
-    <p class="section-lead reveal">Five world-class engineering disciplines — including the only state university Marine Engineering programme in Sri Lanka.</p>
+    <p class="section-lead reveal">Six world-class academic departments — including the only state university Marine Engineering programme in Sri Lanka.</p>
     <div class="dept-grid">
       <a class="dept-card reveal" href="https://www.eng.ruh.ac.lk/dcee/" target="_blank" rel="noopener">
         <span class="dept-icon"></span>
@@ -773,6 +769,11 @@
         <span class="dept-icon"></span>
         <div class="dept-degree">B.Sc.Eng (Hons)</div>
         <div class="dept-name">Computer Engineering</div>
+        <div class="dept-link">Visit Department →</div>
+      </a>
+      <a class="dept-card reveal" href="https://www.eng.ruh.ac.lk/dis/" target="_blank" rel="noopener">
+        <span class="dept-icon"></span>
+        <div class="dept-name">Interdisciplinary Studies</div>
         <div class="dept-link">Visit Department →</div>
       </a>
     </div>
@@ -1005,10 +1006,7 @@
   let isParticipating = true;
 
   // ─── STATS ───
-  fetch('/api/stats').then(r => r.json()).then(d => {
-    if (d.total > 0) document.getElementById('stat-registered').textContent = d.total;
-    else document.getElementById('stat-registered').textContent = '0';
-  }).catch(() => { document.getElementById('stat-registered').textContent = '0'; });
+  // Stats fetch removed
 
   // ─── ATTENDANCE ───
   function setParticipating(val) {
@@ -1138,8 +1136,7 @@
         document.querySelector('.form-progress').style.display = 'none';
         document.getElementById('success-id-val').textContent = data.id;
         document.getElementById('success-screen').classList.add('show');
-        // Refresh stat counter
-        fetch('/api/stats').then(r=>r.json()).then(d=>{ document.getElementById('stat-registered').textContent=d.total; });
+        // Refresh stat counter removed
       } else {
         errDiv.textContent = data.message || 'Submission failed. Please try again.';
         errDiv.style.display = 'block';
